@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web donde aprender a utilizar distintas clases y librerías en programación">
+    <meta name="keywords" content="tutoriales, java, programación, retrofit, retrofit2, REST, RESTAPI">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/tutorial-contenido.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <title>Llamadas REST-API en Java</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="images/logo.png" alt="logo principal">
+        </a>
+        <nav id="nav">
+            <a href="index.html">Inicio</a>
+            <a href="tutoriales.html">Tutoriales</a>
+            <a href="sobrenosotros.html">Sobre nosotros</a>
+        </nav>
+        <div id="hamburgesa" class="hamburgesa">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div> 
+    </header>
+    <article>
+        <h1>Llamadas REST-API en Java</h1>
+        <p>Vamos a ver como consumir una API REST, que son un servicio que funciona bajo una arquitectura Cliente-Servidor utilizando HTTP como protocolo.</p>
+        <p>Para realizar estas llamadas vamos a utilizar la librería <span class="clase">Retrofit2</span>. Se trata de una librería que nos permite hacer peticiones HTTP, gestionar los parámetros
+        de la petición y parsear de forma automática la respuesta a un tipo datos.</p>
+        <div class="contenedor-imagen"><img src="images/api-rest.jpg" alt="criptografia"></div>
+        <p>A continuación vamos a ver un ejemplo en el que haremos llamadas a un servicio API REST, en concreto PokeApi, que nos permite hacer estas llamadas sin necesidad de tener una key.
+        Este ejemplo imprimirá la id del pokemon y su nombre.</p>
+        <p>Lo primero que necesitamos hacer es importar Retrofit2, para ello puedes descargar la librería desde <a href="https://square.github.io/retrofit/">Retrofit2</a>, o puedes utilizar Maven
+        o Gradle. En mi caso yo usaré Gradle e implementaré las siguientes dependencias en el archivo build.gradle.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-xml" style="font-size: large;">
+
+implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.8.0'
+                    
+                </code></pre>
+            </div>
+        </div>
+        <p>Una vez ya instalado vamos a pasar a definir el modelo de datos. La respuesta a nuestra llamada nos devolvera un Array de Pokemon, y estos Pokemon contendrán el nombre y la URL de la imagen.
+        Por lo que quedaría tal que así.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public class Pokemon {
+
+    private String name;
+    private String url;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+}
+                    
+                </code></pre>
+            </div>
+        </div>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public class PokemonList {
+
+    private ArrayList<&zwj;Pokemon> results;
+
+    public ArrayList<&zwj;Pokemon> getPokemonList() {
+        return results;
+    }
+}                    
+                    
+                </code></pre>
+            </div>
+        </div>   
+        <p>Ahora vamos a crear una clase llamada <span class="clase">PokemonApi</span>, que contendrá la url base de la web, creará la instancia de retrofit y nos permitira acceder al servicio.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public class PokemonApi {
+
+    public static String url = "http://pokeapi.co/api/v2/";
+
+    public static Retrofit builder(String url){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit;
+    }
+
+    public static PokemonService getPokemonService(){
+        return PokemonApi.builder(url).create(PokemonService.class);
+    }
+}                                   
+                    
+                </code></pre>
+            </div>
+        </div>
+        <p>A continuación vamos a crear la interfaz <span class="clase">PokemonService</span>, que tendrá un método para obtener la lista de Pokemon.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-c" style="font-size: large;">
+
+public interface PokemonService {
+
+    /*  "pokemon" es la continuación de la url base por lo que la url
+    *   quedaría tal que asi -> http://pokeapi.co/api/v2/pokemon
+    */
+    @GET("pokemon")
+    Call<&zwj;PokemonList> getPokemonListResult();
+    
+}                  
+                    
+                </code></pre>
+            </div>
+        </div>
+        <p>Con esto ya estaría todo preparado para realizar las llamadas.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public static void main(String[] args) {
+    //  Creamos el servicio
+    PokemonService service = PokemonApi.getPokemonService();
+    //  Creamos la llamada usando el método getPokemonListResult() del servicio
+    Call<&zwj;PokemonList> pokemonListCall = service.getPokemonListResult();
+
+    /*  Ponemos la llamada en la cola. onResponse() se ejecutará si hemos obtenido los datos y
+    *   onFailure() si se ha producido un error
+    */
+    pokemonListCall.enqueue(new Callback<&zwj;PokemonList>() {
+        @Override
+        public void onResponse(Call<&zwj;PokemonList> call, Response<&zwj;PokemonList> response) {
+            if(response.isSuccessful()){
+                PokemonList pokemonList = response.body();
+                int counter = 1;
+                for(Pokemon pokemon : pokemonList.getPokemonList()){
+                    System.out.println(counter + "- " + pokemon.getName());
+                    counter++;
+                }
+            }else{
+                System.out.println(response.errorBody());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<&zwj;PokemonList> call, Throwable t) {
+            System.out.println("Error al recuperar los datos");
+        }
+    });
+}
+
+                </code></pre>
+            </div>
+        </div>
+        <p>El resultado sería el siguiente. El resultado son los 20 primeros, si quisieramos los siguientes otros 20 parametro habría que pasar un parámetro al servidor.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <div class="contenedor-codigo-superior">
+                    <p>Resultado.</p>
+                    <button onclick="mostrarEsconder(event, 'codigo')">Mostrar</button>
+                </div> 
+                <pre id="codigo" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
+        1- bulbasaur            
+        2- ivysaur
+        3- venusaur
+        4- charmander
+        5- charmeleon
+        6- charizard
+        7- squirtle
+        8- wartortle
+        9- blastoise
+        10- caterpie
+        11- metapod
+        12- butterfree
+        13- weedle
+        14- kakuna
+        15- beedrill
+        16- pidgey
+        17- pidgeotto
+        18- pidgeot
+        19- rattata
+        20- raticate
+                </code></pre>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <img src="images/logo.png" alt="logo">
+        <p>Copyright 2022</p>
+    </footer>
+    <script src="javascript/scripts.js"></script>
+</body>
+</html>

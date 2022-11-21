@@ -1,0 +1,151 @@
+
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0 auto;
+    padding: 0px;
+    background-color: #203354;
+}
+header{
+    width: 90%;
+    position: fixed;
+    top: 0px;
+    display: flex;
+    justify-content: stretch;
+    background-color: #151538;
+    padding: 0px 20%;
+    z-index: 1;
+}
+header img{
+    padding: 10px;
+    width: 50px;
+}
+
+.hamburgesa{
+    padding: 17px;
+    display: none;
+    cursor: pointer;
+}
+
+.hamburgesa .linea{
+    width: 30px;
+    height: 3px;
+    background-color: #ffffffcc;
+    border-radius: 5px;
+    margin: 6px 0;
+}
+
+nav{
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+nav a{
+    height: 50px;
+    line-height: 45px;
+    margin: 10px;
+    color: #ffffffcc;
+    text-decoration: none;
+    font-size: larger;
+}
+
+nav a:hover{
+    color: #de584f;
+}
+nav a:nth-child(even):hover{
+    color: #c4454e;
+}
+
+footer{
+    height: 70px;
+    background-color: #151538;
+    display: flex;
+    align-items: center;
+    padding: 0px 20%;
+}
+
+footer img{
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+
+h1{
+    color: #ffffff;
+    font-size: 2em;
+    text-align: center;
+}
+
+p{
+    color: white;
+    text-align: start;
+    font-size: 0.950em;
+    line-height: 1.5;
+}
+
+
+@media (max-width: 1200px) {
+
+    header{
+        padding: 0px 10%;
+    }
+
+    footer{
+        padding: 0px 10%;
+    }
+}
+@media(max-width: 700px) {
+    header{
+        padding: 0px 5%;
+        justify-content: space-between;
+    }
+
+    .hamburgesa{
+        display: block;
+    }
+
+    .hamburgesa:hover > .linea{
+        background-color: #de584f;
+
+    }
+
+    nav{
+        height: 0px;
+        position: absolute;
+        display: flex;
+        width: 100%;
+        top: 70px;
+        left: -15px;
+        flex-direction: column;
+        background-color: #151538;
+        transition: 0.2s;
+        overflow: hidden;
+    }
+
+    .activo{
+        height: 170px;
+        transition: 0.2s;
+    }
+
+    nav a{
+        height: 30px;
+        line-height: 25px;
+        width: 100%;
+        text-align: center;
+        opacity: 0;
+    }
+
+    .activo a{
+        opacity: 1;
+        transition: 0.25s;
+    }
+    header{
+        padding: 0px 5%;
+    }
+}
+
+@media(max-width: 550px) {
+
+
+}

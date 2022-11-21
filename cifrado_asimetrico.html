@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web donde aprender a utilizar distintas clases y librerías en programación">
+    <meta name="keywords" content="tutoriales, java, programación, cifrado asimetrico, KeyPairGenerator, Cipher">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/tutorial-contenido.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <title>Cifrado asimétrico en Java</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="images/logo.png" alt="logo principal">
+        </a>
+        <nav id="nav">
+            <a href="index.html">Inicio</a>
+            <a href="tutoriales.html">Tutoriales</a>
+            <a href="sobrenosotros.html">Sobre nosotros</a>
+        </nav>
+        <div id="hamburgesa" class="hamburgesa">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div> 
+    </header>
+    <article>
+        <h1>Cifrado asimétrico en Java</h1>
+        <p>Vamos a ver como encriptar y desencriptar de forma asimétrica texto o archivos en Java. Este tipo de cifrado utiliza 2 llaves para el proceso, por una parte tenemos una clave pública, 
+            que será la encargada de encriptar, y por otro lado tenemos la clave privada, que es la encargada de desencriptar el contenido encriptado con la llave pública. Por tanto la llave pública
+            es la que compartiremos con otros usuarios para que nos envien la información cifrada, mientras que la llave privada permanece de forma segura con nosotros.</p>
+        <div class="contenedor-imagen"><img src="images/cifrado_asimetrico_image.jpg" alt="criptografia"></div>
+        <p>Para utilizar este tipo de cifrado en Java tenemos la clase <span class="clase">KeyPairGenerator</span>, que como su nombre indica, esta clase nos permite generar un juego de llaves, una llave privada y otra llave pública. </p>
+        <p>A continuación vamos a ver un ejemplo en el que vamos a encriptar una cadena de texto para ver como queda una vez encriptada y posteriormente procederemos a desencriptarla.</p>
+        <p>Para empezar crearemos un objeto de tipo <span class="clase">KeyPairGenerator</span> utilizando el algoritmo RSA, generaremos un par de llaves y vamos a declarar una cadena de texto que usaremos para encriptar y desencriptar.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+/*  Utilizamos el metodo estático getInstance() especificando el 
+*   tipo de algoritmo que vamos a usar para crear el objeto
+*/ 
+KeyPairGenerator key = KeyPairGenerator.getInstance("RSA");
+
+//  Especificamos el tamaño de la llave en bits
+key.initialize(1024);
+        
+//  Generamos el par de llaves que se almacenan en el objeto KeyPair
+KeyPair keyPair = key.generateKeyPair();
+//  Obtenemos ambas llaves por separado
+PublicKey publicKey = keyPair.getPublic();
+PrivateKey privateKey = keyPair.getPrivate();
+
+String msg = "Mensaje para encriptar y posteriormente desencriptar";
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Lo siguiente que vamos a hacer es crear 2 métodos, uno se encargará de encriptar y el otro de desencriptar. Estos metodos utilizarán la clase <span class="clase">Cipher</span> para realizar la tarea de cifrado.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public static byte[] encriptar(byte[] inputBytes, PublicKey publicKey, String algorithm){
+    
+    try {
+
+        /*  Utilizamos el metodo estático getInstance() especificando el tipo de algoritmo que
+        *   vamos a usar para crear el objeto, que será RSA.
+        */ 
+        Cipher cipher = Cipher.getInstance(algorithm);
+
+        //  Inicializamos el cipher en modo de encriptado y pasamos la llave pública
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        /*  Por último le pasamos el texto en bytes, y nos devolverá el texto encriptado
+        *   en bytes
+        */
+        return cipher.doFinal(inputBytes);
+        
+    }  catch (Exception ex) {
+        System.out.print(ex);
+    }
+
+    return null;
+}
+
+public static byte[] desencriptar(byte[] inputBytes, PrivateKey privateKey, String algorithm){
+    
+    try {
+
+        Cipher cipher = Cipher.getInstance(algorithm);
+
+        //  Inicializamos el cipher en modo de desencriptado y pasamos la llave privada
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        return cipher.doFinal(inputBytes);
+        
+    }  catch (Exception ex) {
+        System.out.print(ex);
+    }
+
+    return null;
+}
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Una vez creados los métodos ya podemos proceder probar el encriptado y desencriptado de nuestro mensaje de prueba.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+System.out.println("Texto sin encriptar -> " + msg);
+
+byte[] msgEncryptedBytes = encriptar(msg.getBytes(), publicKey, key.getAlgorithm());
+System.out.println("Texto encriptado -> " + new String(msgEncryptedBytes));
+
+byte[] msgDecryptedBytes = desencriptar(msgEncryptedBytes, privateKey, key.getAlgorithm());
+System.out.println("Texto desencriptado -> " + new String(msgDecryptedBytes));
+
+                </code></pre>
+            </div>
+        </div>
+        <p><span class="atencion">Atención:</span> Convertir datos encriptados de bytes a String no es una buena práctica ya que se puede perder información o corromper los datos en el proceso.</p>
+        <p>A continuación dejaré el código completo de la clase creada.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <div class="contenedor-codigo-superior">
+                    <p>Código completo.</p>
+                    <button onclick="mostrarEsconder(event, 'codigo')">Mostrar</button>
+                </div> 
+
+                <pre id="codigo" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
+
+public class CifradoAsimetrico {
+
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+        
+        /*  Utilizamos el metodo estático getInstance() especificando el tipo de algoritmo que
+        *   vamos a usar para crear el objeto
+        */ 
+        KeyPairGenerator key = KeyPairGenerator.getInstance("RSA");
+
+        //  Especificamos el tamaño de la llave en bits
+        key.initialize(1024);
+                
+        //  Generamos el par de llaves que se almacenan en el objeto KeyPair
+        KeyPair keyPair = key.generateKeyPair();
+        //  Obtenemos ambas llaves por separado
+        PublicKey publicKey = keyPair.getPublic();
+        PrivateKey privateKey = keyPair.getPrivate();
+
+        String msg = "Mensaje para encriptar y posteriormente desencriptar";
+            
+        System.out.println("Texto sin encriptar -> " + msg);
+
+        byte[] msgEncryptedBytes = encriptar(msg.getBytes(), publicKey, key.getAlgorithm());
+        System.out.println("Texto encriptado -> " + new String(msgEncryptedBytes));
+
+        byte[] msgDecryptedBytes = desencriptar(msgEncryptedBytes, privateKey, key.getAlgorithm());
+        System.out.println("Texto desencriptado -> " + new String(msgDecryptedBytes));
+    }
+
+
+    
+    public static byte[] encriptar(byte[] inputBytes, PublicKey publicKey, String algorithm){
+        
+        try {
+
+            /*  Utilizamos el metodo estático getInstance() especificando el tipo de algoritmo que
+            *   vamos a usar para crear el objeto, que será RSA.
+            */ 
+            Cipher cipher = Cipher.getInstance(algorithm);
+
+            //  Inicializamos el cipher en modo de encriptado y pasamos la llave pública
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            /*  Por último le pasamos el texto en bytes, y nos devolverá el texto encriptado
+            *   en bytes
+            */
+            return cipher.doFinal(inputBytes);
+            
+        }  catch (Exception ex) {
+            System.out.print(ex);
+        }
+    
+        return null;
+    }
+
+
+
+    public static byte[] desencriptar(byte[] inputBytes, PrivateKey privateKey, String algorithm){
+        
+        try {
+
+            Cipher cipher = Cipher.getInstance(algorithm);
+
+            //  Inicializamos el cipher en modo de desencriptado y pasamos la llave privada
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            return cipher.doFinal(inputBytes);
+            
+        }  catch (Exception ex) {
+            System.out.print(ex);
+        }
+    
+        return null;
+    }
+}
+        
+                </code></pre>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <img src="images/logo.png" alt="logo">
+        <p>Copyright 2022</p>
+    </footer>
+    <script src="javascript/scripts.js"></script>
+</body>
+</html>

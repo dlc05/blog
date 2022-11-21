@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web donde aprender a utilizar distintas clases y librerías en programación">
+    <meta name="keywords" content="tutoriales, java, programación, Robot, bot">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/tutorial-contenido.css">
+    <link rel="stylesheet" href="css/prettify.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <title>Bots simples en Java</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="images/logo.png" alt="logo principal">
+        </a>
+        <nav id="nav">
+            <a href="index.html">Inicio</a>
+            <a href="tutoriales.html">Tutoriales</a>
+            <a href="sobrenosotros.html">Sobre nosotros</a>
+        </nav>
+        <div id="hamburgesa" class="hamburgesa">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div> 
+    </header>
+    <article>
+        <h1>Bots simples en Java</h1>
+        <p>Vamos a ver como crear una pequeña aplicación que simule utilizar el teclado.</p>
+        <p>Para realizar este tipo de tareas automatizada tenemos una clase llamada <span class="clase">Robot</span>. Se trata de una clase muy simple que nos permite simular inputs por teclado
+        y ratón, añadiendo alguna funcionalidad extra como la de realizar una captura de pantalla o indicar el color que contiene un pixel en la pantalla. Para bots con mas complejidad y que
+        requieran más funcionalidades, pueden utilizar la libreria de <strong>Selenium</strong>,que contienen más características que esta clase.</p>
+        <div class="contenedor-imagen"><img src="images/robot.jpg" alt="criptografia"></div>
+        <p>A continuación vamos a ver un ejemplo en el que crearemos un pequeño bot que nos abra una consola cmd y ejecute el comando netstat -ano, para ver las conexiones activas en nuestro PC. </p>
+        <p>Para este ejemplo vamos a crear nosotros una clase propia, en mi caso la llamare <span class="clase">BotTexto</span> y extenderá de la clase <span class="clase">Robot</span> del paquete
+        AWT.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public class BotTexto extends Robot{
+
+    /*  Creamos un constructor vacio que pondra el delay en 100 ms,
+    *   este delay es el tiempo que pasa entre cada acción
+    */
+    public BotTexto() throws AWTException{
+        this.setAutoDelay(100);
+    }
+
+}
+                    
+                </code></pre>
+            </div>
+        </div>
+        <p><span class="atencion">Atención:</span> Introducir tiempos demasiado bajos en setAutoDelay(int) puede provocar que en ocasiones no se introduzcan las teclas correctamente.</p>
+        <p>Una vez creada la clase vamos a almacenar todas las teclas que necesitemos en un <span class="clase">Map</span>. En mi caso yo he almacenado las siguientes:</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <div class="contenedor-codigo-superior">
+                    <p>Mapeo de teclas.</p>
+                    <button onclick="mostrarEsconder(event, 'codigo')">Mostrar</button>
+                </div> 
+                <pre id="codigo" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
+
+private final static Map<String, Integer[]> map = new HashMap<>();
+
+static{
+    map.put("a", new Integer[] {KeyEvent.VK_A});
+    map.put("á", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_A});
+    map.put("A", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_A});
+    map.put("Á", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_A});
+    map.put("b", new Integer[] {KeyEvent.VK_B});
+    map.put("B", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_B});
+    map.put("c", new Integer[] {KeyEvent.VK_C});
+    map.put("C", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_C});
+    map.put("d", new Integer[] {KeyEvent.VK_D});
+    map.put("D", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_D});
+    map.put("e", new Integer[] {KeyEvent.VK_E});
+    map.put("é", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_E});
+    map.put("E", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_E});
+    map.put("É", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_E});
+    map.put("f", new Integer[] {KeyEvent.VK_F});
+    map.put("F", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_F});
+    map.put("g", new Integer[] {KeyEvent.VK_G});
+    map.put("G", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_G});
+    map.put("h", new Integer[] {KeyEvent.VK_H});
+    map.put("H", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_H});
+    map.put("i", new Integer[] {KeyEvent.VK_I});
+    map.put("í", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_I});
+    map.put("I", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_I});
+    map.put("Í", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_I});
+    map.put("j", new Integer[] {KeyEvent.VK_J});
+    map.put("J", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_J});
+    map.put("k", new Integer[] {KeyEvent.VK_K});
+    map.put("K", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_K});
+    map.put("l", new Integer[] {KeyEvent.VK_L});
+    map.put("L", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_L});
+    map.put("m", new Integer[] {KeyEvent.VK_M});
+    map.put("M", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_M});
+    map.put("n", new Integer[] {KeyEvent.VK_N});
+    map.put("N", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_N});
+    map.put("o", new Integer[] {KeyEvent.VK_O});
+    map.put("ó", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_O});
+    map.put("O", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_O});
+    map.put("Ó", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_O});
+    map.put("p", new Integer[] {KeyEvent.VK_P});
+    map.put("P", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_P});
+    map.put("q", new Integer[] {KeyEvent.VK_Q});
+    map.put("Q", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Q});
+    map.put("r", new Integer[] {KeyEvent.VK_R});
+    map.put("R", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_R});
+    map.put("s", new Integer[] {KeyEvent.VK_S});
+    map.put("S", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_S});
+    map.put("t", new Integer[] {KeyEvent.VK_T});
+    map.put("T", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_T});
+    map.put("u", new Integer[] {KeyEvent.VK_U});
+    map.put("ú", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_U});
+    map.put("U", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_U});
+    map.put("Ú", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_U});
+    map.put("v", new Integer[] {KeyEvent.VK_V});
+    map.put("V", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_V});
+    map.put("w", new Integer[] {KeyEvent.VK_W});
+    map.put("W", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_W});
+    map.put("x", new Integer[] {KeyEvent.VK_X});
+    map.put("X", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_X});
+    map.put("y", new Integer[] {KeyEvent.VK_Y});
+    map.put("Y", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Y});
+    map.put("z", new Integer[] {KeyEvent.VK_Z});
+    map.put("Z", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Z});
+    map.put("0", new Integer[] {KeyEvent.VK_0});
+    map.put("1", new Integer[] {KeyEvent.VK_1});
+    map.put("2", new Integer[] {KeyEvent.VK_2});
+    map.put("3", new Integer[] {KeyEvent.VK_3});
+    map.put("4", new Integer[] {KeyEvent.VK_4});
+    map.put("5", new Integer[] {KeyEvent.VK_5});
+    map.put("6", new Integer[] {KeyEvent.VK_6});
+    map.put("7", new Integer[] {KeyEvent.VK_7});
+    map.put("8", new Integer[] {KeyEvent.VK_8});
+    map.put("9", new Integer[] {KeyEvent.VK_9});
+    map.put(" ", new Integer[] {KeyEvent.VK_SPACE});
+    map.put(",", new Integer[] {KeyEvent.VK_COMMA});
+    map.put(";", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_COMMA});
+    map.put(".", new Integer[] {KeyEvent.VK_PERIOD});
+    map.put(":", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_PERIOD});
+    map.put("-", new Integer[] {KeyEvent.VK_MINUS});
+    map.put("_", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_MINUS});
+
+    /*  Para utilizar teclas que no tienen un caracter, podemos asignarles otros 
+    *   caracteres que no utilicemos.
+    */
+
+    map.put("<", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<"
+    map.put(">", new Integer[] {KeyEvent.VK_WINDOWS});  //  Tecla windows = ">"
+
+}
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Por último crear un par de métodos que nos facilitaran la tarea al ejecutar el bot.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public void write(String sentence){
+
+    /*  Convertimos la cadena de texto en caracteres y los mapeamos, para 
+    *   cada char llamamos al método write(char) que se encargara de pulsar la tecla
+    */
+    sentence
+        .chars()
+        .mapToObj(i -> (char)i)
+        .forEach((t) -> write(t));
+}
+
+public void write(char letter){
+
+    //  Obtenemos la combinacion de teclas que requiere esa letra del Map
+    Integer[] keys = map.get(String.valueOf(letter));
+
+    /*  Si es null, significa que esta tecla no se encuentra en nuestro Map, 
+    *   por lo que le asignamos un valor por defecto, en estre caso será "_"
+    */
+    if(keys == null){
+        write('_');
+        return;
+    }
+    
+    //  Presionamos el combo de letras Ejemplo: M = shift + m
+    for(Integer key : keys){
+        this.keyPress(key);
+    }
+
+    //  Una vez presionadas las liberamos
+    for(Integer key : keys){
+        this.keyRelease(key);
+    }
+    
+}
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Y ya estaría lista la clase para utilizarse. A continuación vamos a ver el ejemplo de abrir una cmd e introducir un comando.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public static void main(String[] args) throws AWTException {
+    BotTexto bot = new BotTexto();
+    
+    //  Paramos el hilo durante 3 segundos antes de ejecutar el bot
+    try {
+        Thread.sleep(3000);
+    } catch (InterruptedException ex) {
+        System.out.println(ex);
+    }
+
+    /*  > = windows key, < = enter key;
+    *   Presiona la tecla windows, escribe cmd, pulsa intro, escribe 
+    *   netstat -ano, pulsa intro
+    */
+    bot.write(">cmd< netstat -ano<");
+}
+                    
+                </code></pre>
+            </div>
+        </div>
+        <p>A continuación dejaré el código completo de la clase creada.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <div class="contenedor-codigo-superior">
+                    <p>Código completo.</p>
+                    <button onclick="mostrarEsconder(event, 'codigo2')">Mostrar</button>
+                </div> 
+
+                <pre id="codigo2" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
+
+public class BotTexto extends Robot{
+
+    private final static Map<String, Integer[]> map = new HashMap<>();
+
+    static{
+        map.put("a", new Integer[] {KeyEvent.VK_A});
+        map.put("á", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_A});
+        map.put("A", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_A});
+        map.put("Á", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_A});
+        map.put("b", new Integer[] {KeyEvent.VK_B});
+        map.put("B", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_B});
+        map.put("c", new Integer[] {KeyEvent.VK_C});
+        map.put("C", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_C});
+        map.put("d", new Integer[] {KeyEvent.VK_D});
+        map.put("D", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_D});
+        map.put("e", new Integer[] {KeyEvent.VK_E});
+        map.put("é", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_E});
+        map.put("E", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_E});
+        map.put("É", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_E});
+        map.put("f", new Integer[] {KeyEvent.VK_F});
+        map.put("F", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_F});
+        map.put("g", new Integer[] {KeyEvent.VK_G});
+        map.put("G", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_G});
+        map.put("h", new Integer[] {KeyEvent.VK_H});
+        map.put("H", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_H});
+        map.put("i", new Integer[] {KeyEvent.VK_I});
+        map.put("í", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_I});
+        map.put("I", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_I});
+        map.put("Í", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_I});
+        map.put("j", new Integer[] {KeyEvent.VK_J});
+        map.put("J", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_J});
+        map.put("k", new Integer[] {KeyEvent.VK_K});
+        map.put("K", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_K});
+        map.put("l", new Integer[] {KeyEvent.VK_L});
+        map.put("L", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_L});
+        map.put("m", new Integer[] {KeyEvent.VK_M});
+        map.put("M", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_M});
+        map.put("n", new Integer[] {KeyEvent.VK_N});
+        map.put("N", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_N});
+        map.put("o", new Integer[] {KeyEvent.VK_O});
+        map.put("ó", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_O});
+        map.put("O", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_O});
+        map.put("Ó", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_O});
+        map.put("p", new Integer[] {KeyEvent.VK_P});
+        map.put("P", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_P});
+        map.put("q", new Integer[] {KeyEvent.VK_Q});
+        map.put("Q", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Q});
+        map.put("r", new Integer[] {KeyEvent.VK_R});
+        map.put("R", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_R});
+        map.put("s", new Integer[] {KeyEvent.VK_S});
+        map.put("S", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_S});
+        map.put("t", new Integer[] {KeyEvent.VK_T});
+        map.put("T", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_T});
+        map.put("u", new Integer[] {KeyEvent.VK_U});
+        map.put("ú", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_U});
+        map.put("U", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_U});
+        map.put("Ú", new Integer[] {KeyEvent.VK_DEAD_ACUTE, KeyEvent.VK_SHIFT, KeyEvent.VK_U});
+        map.put("v", new Integer[] {KeyEvent.VK_V});
+        map.put("V", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_V});
+        map.put("w", new Integer[] {KeyEvent.VK_W});
+        map.put("W", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_W});
+        map.put("x", new Integer[] {KeyEvent.VK_X});
+        map.put("X", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_X});
+        map.put("y", new Integer[] {KeyEvent.VK_Y});
+        map.put("Y", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Y});
+        map.put("z", new Integer[] {KeyEvent.VK_Z});
+        map.put("Z", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_Z});
+        map.put("0", new Integer[] {KeyEvent.VK_0});
+        map.put("1", new Integer[] {KeyEvent.VK_1});
+        map.put("2", new Integer[] {KeyEvent.VK_2});
+        map.put("3", new Integer[] {KeyEvent.VK_3});
+        map.put("4", new Integer[] {KeyEvent.VK_4});
+        map.put("5", new Integer[] {KeyEvent.VK_5});
+        map.put("6", new Integer[] {KeyEvent.VK_6});
+        map.put("7", new Integer[] {KeyEvent.VK_7});
+        map.put("8", new Integer[] {KeyEvent.VK_8});
+        map.put("9", new Integer[] {KeyEvent.VK_9});
+        map.put(" ", new Integer[] {KeyEvent.VK_SPACE});
+        map.put(",", new Integer[] {KeyEvent.VK_COMMA});
+        map.put(";", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_COMMA});
+        map.put(".", new Integer[] {KeyEvent.VK_PERIOD});
+        map.put(":", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_PERIOD});
+        map.put("-", new Integer[] {KeyEvent.VK_MINUS});
+        map.put("_", new Integer[] {KeyEvent.VK_SHIFT, KeyEvent.VK_MINUS});
+
+        /*  Para utilizar teclas que no tienen un caracter, podemos asignarles otros 
+        *   caracteres que no utilicemos.
+        */
+
+        map.put("<", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<"
+        map.put(">", new Integer[] {KeyEvent.VK_WINDOWS});  //  Tecla windows = ">"
+
+    }
+
+    /*  Creamos un constructor vacio que pondra el delay en 200 ms,
+    *   este delay es el tiempo que pasa entre cada acción
+    */
+    public BotTexto() throws AWTException{
+        this.setAutoDelay(100);
+    }
+    
+    public void write(String sentence){
+
+        /*  Convertimos la cadena de texto en caracteres y los mapeamos, para 
+        *   cada char llamamos al método write(char) que se encargara de pulsar la tecla
+        */
+        sentence
+            .chars()
+            .mapToObj(i -> (char)i)
+            .forEach((t) -> write(t));
+    }
+
+    public void write(char letter){
+
+        //  Obtenemos la combinacion de teclas que requiere esa letra del Map
+        Integer[] keys = map.get(String.valueOf(letter));
+
+        /*  Si es null, significa que esta tecla no se encuentra en nuestro Map, 
+        *   por lo que le asignamos un valor por defecto, en estre caso será "_"
+        */
+        if(keys == null){
+            write('_');
+            return;
+        }
+
+        //  Presionamos el combo de letras Ejemplo: M = shift + m
+        for(Integer key : keys){
+            this.keyPress(key);
+        }
+
+        //  Una vez presionadas las liberamos
+        for(Integer key : keys){
+            this.keyRelease(key);
+        }
+
+    }
+    
+    public static void main(String[] args) throws AWTException {
+        BotTexto bot = new BotTexto();
+
+        //  Paramos el hilo durante 3 segundos antes de ejecutar el bot
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        }
+
+        /*  > = windows key, < = enter key;
+        *   Presiona la tecla windows, escribe cmd, pulsa intro, escribe 
+        *   netstat -ano, pulsa intro
+        */
+        bot.write(">cmd< netstat -ano<");
+    }
+
+}
+
+                </code></pre>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <img src="images/logo.png" alt="logo">
+        <p>Copyright 2022</p>
+    </footer>
+    <script src="javascript/scripts.js"></script>
+</body>
+</html>
