@@ -101,8 +101,14 @@ p{
         justify-content: space-between;
     }
 
+    header img{
+        padding: 3px;
+        width: 50px;
+    }
+
     .hamburgesa{
         display: block;
+        padding: 10px;
     }
 
     .hamburgesa:hover > .linea{
