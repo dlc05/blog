@@ -101,6 +101,7 @@ hr{
     }
 
     article{
+         margin-top: 55px;
         padding: 30px 5%;
     }
 }
