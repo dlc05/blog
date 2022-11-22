@@ -69,3 +69,9 @@ section{
         padding: 50px 5%;
     }
 }
+
+@media(max-width: 500px) {
+    .redes img{
+        margin: 0px 10px;
+    }
+}
