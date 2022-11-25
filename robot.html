@@ -67,7 +67,7 @@ public class BotTexto extends Robot{
                 </div> 
                 <pre id="codigo" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
 
-private final static Map<String, Integer[]> map = new HashMap<>();
+private final static Map<&zwj;String, Integer[]> map = new HashMap<&zwj;>();
 
 static{
     map.put("a", new Integer[] {KeyEvent.VK_A});
@@ -154,7 +154,7 @@ static{
     *   caracteres que no utilicemos.
     */
 
-    map.put("<", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<"
+    map.put("<&zwj;", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<&zwj;"
     map.put(">", new Integer[] {KeyEvent.VK_WINDOWS});  //  Tecla windows = ">"
 
 }
@@ -221,11 +221,11 @@ public static void main(String[] args) throws AWTException {
         System.out.println(ex);
     }
 
-    /*  > = windows key, < = enter key;
+    /*  > = windows key, <&zwj; = enter key;
     *   Presiona la tecla windows, escribe cmd, pulsa intro, escribe 
     *   netstat -ano, pulsa intro
     */
-    bot.write(">cmd< netstat -ano<");
+    bot.write(">cmd<&zwj; netstat -ano<&zwj;");
 }
                     
                 </code></pre>
@@ -243,7 +243,7 @@ public static void main(String[] args) throws AWTException {
 
 public class BotTexto extends Robot{
 
-    private final static Map<String, Integer[]> map = new HashMap<>();
+    private final static Map<&zwj;String, Integer[]> map = new HashMap<&zwj;>();
 
     static{
         map.put("a", new Integer[] {KeyEvent.VK_A});
@@ -330,7 +330,7 @@ public class BotTexto extends Robot{
         *   caracteres que no utilicemos.
         */
 
-        map.put("<", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<"
+        map.put("<&zwj;", new Integer[] {KeyEvent.VK_ENTER});    //  Tecla intro = "<&zwj;"
         map.put(">", new Integer[] {KeyEvent.VK_WINDOWS});  //  Tecla windows = ">"
 
     }
@@ -388,11 +388,11 @@ public class BotTexto extends Robot{
             System.out.println(ex);
         }
 
-        /*  > = windows key, < = enter key;
+        /*  > = windows key, <&zwj; = enter key;
         *   Presiona la tecla windows, escribe cmd, pulsa intro, escribe 
         *   netstat -ano, pulsa intro
         */
-        bot.write(">cmd< netstat -ano<");
+        bot.write(">cmd<&zwj; netstat -ano<&zwj;");
     }
 
 }
