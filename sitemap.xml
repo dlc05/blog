@@ -8,33 +8,43 @@
 
 
 <url>
-  <loc>https://dlc05.github.io/blog/index.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <loc>https://dlc05.github.io/blog/</loc>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://dlc05.github.io/blog/tutoriales.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <loc>https://dlc05.github.io/blog/index.html</loc>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://dlc05.github.io/blog/sobrenosotros.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <loc>https://dlc05.github.io/blog/tutoriales.html</loc>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://dlc05.github.io/blog/sobremi.html</loc>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://dlc05.github.io/blog/cifrado_asimetrico.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://dlc05.github.io/blog/robot.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://dlc05.github.io/blog/llamadas_rest_api.html</loc>
-  <lastmod>2022-12-19T16:49:41+00:00</lastmod>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://dlc05.github.io/blog/cifrado_simetrico/</loc>
+  <lastmod>2023-05-13T18:32:23+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
