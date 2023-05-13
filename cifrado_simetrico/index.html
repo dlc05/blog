@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Daniel León">
+    <meta name="description" content="Web donde aprender a utilizar distintas clases y librerías en programación">
+    <meta name="keywords" content="tutoriales, java, programación, cifrado simetrico, KeyGenerator, Cipher, AES">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/tutorial-contenido.css">
+    <link rel="stylesheet" href="../css/prettify.css">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <title>Cifrado simétrico en Java</title>
+</head>
+<body>
+    <header>
+        <a href="../index.html">
+            <img src="../images/logo.png" alt="logo principal">
+        </a>
+        <nav id="nav">
+            <a href="../index.html">Inicio</a>
+            <a href="../tutoriales.html">Tutoriales</a>
+            <a href="../sobremi.html">Sobre mí</a>
+        </nav>
+        <div id="hamburgesa" class="hamburgesa">
+            <div class="linea"></div>
+            <div class="linea"></div>
+            <div class="linea"></div>
+        </div> 
+    </header>
+    <article>
+        <h1>Cifrado simétrico en Java</h1>
+        <p>Vamos a ver como encriptar y desencriptar de forma asimétrica texto o archivos en Java. Este tipo de cifrado consiste en usar una única clave, que se utilizara tanto para cifrar
+            como descifrar los datos.</p>
+        <div class="contenedor-imagen"><img src="../images/cifrado_simetrico_image.webp" alt="criptografia"></div>
+        <p>Para utilizar este tipo de cifrado en Java vamos a utilizar la clase <span class="clase">KeyGenerator</span>. Esta clase nos permite generar una llave, que será la que utilizaremos para el encriptado y desencriptado.</p>
+        <p>A continuación vamos a hacer un pequeño programa que nos va a permitir encriptar y desencriptar una cadena de texto usando una llave generada usando la clase mencionada anteriormente.</p>
+        <p>Lo primero que haremos es crear un objeto de tipo <span class="clase">KeyGenerator</span> utilizando el algoritmo AES, generando una llave y declarando una cadena de texto que vamos a utilizar para el proceso de encriptado.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+/*  Creamos el objeto SecureRandom, que nos permite generar números aleatorios 
+*   de manera segura y posteriormente creamos el objeto KeyGenerator utilizando
+*   el método estático getInstance(), pasandolo como parámetro el tipo de 
+*   algoritmo que vamos a utilizar, en este caso será AES
+*/
+SecureRandom sr = new SecureRandom();
+KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+
+/*  Especificamos el tamaño de la llave en bits y le pasamos el objeto SecureRandom,
+*   que permitirá generar la clave aleatoria de forma segura.
+*/
+keyGenerator.init(256, sr);
+
+//  Generamos la llave
+SecretKey key = keyGenerator.generateKey();
+
+String msg = "Mensaje para encriptar y posteriormente desencriptar";
+
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Lo siguiente que vamos a hacer es crear 2 métodos, uno se encargará de encriptar y el otro de desencriptar. Estos metodos utilizarán la clase <span class="clase">Cipher</span> para realizar la tarea de cifrado.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+public static byte[] encriptar(byte[] inputBytes, SecretKey key, String algorithm){
+    
+    try {
+        /*  Utilizamos el metodo estático getInstance() especificando el tipo de algoritmo que
+        *   vamos a usar para crear el objeto, que será AES.
+        */ 
+        Cipher cipher = Cipher.getInstance(algorithm);
+
+        //  Inicializamos el cipher en modo de encriptado y pasamos la llave
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+
+        /*  Por último le pasamos el texto en bytes, y nos devolverá el texto encriptado
+        *   en bytes
+        */
+        return cipher.doFinal(inputBytes);
+        
+    }  catch (Exception ex) {
+        System.out.print(ex);
+    }
+
+    return null;
+
+}
+
+public static byte[] desencriptar(byte[] inputBytes, SecretKey key, String algorithm){
+    
+    try {
+
+        Cipher cipher = Cipher.getInstance(algorithm);
+
+        //  Inicializamos el cipher en modo de desencriptado y pasamos la llave
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(inputBytes);
+        
+    }  catch (Exception ex) {
+        System.out.print(ex);
+    }
+
+    return null;
+
+}
+
+                </code></pre>
+            </div>
+        </div>
+        <p>Una vez creados los métodos ya podemos proceder probar el encriptado y desencriptado de nuestro mensaje de prueba.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <pre class="prettyprint"><code class="language-java" style="font-size: large;">
+
+System.out.println("Texto sin encriptar -> " + msg);
+
+byte[] msgEncryptedBytes = encriptar(msg.getBytes(), key, key.getAlgorithm());
+System.out.println("Texto encriptado -> " + new String(msgEncryptedBytes));
+
+byte[] msgDecryptedBytes = desencriptar(msgEncryptedBytes, key, key.getAlgorithm());
+System.out.println("Texto desencriptado -> " + new String(msgDecryptedBytes));            
+
+                </code></pre>
+            </div>
+        </div>
+        <p><span class="atencion">Atención:</span> Convertir datos encriptados de bytes a String no es una buena práctica ya que se puede perder información o corromper los datos en el proceso.</p>
+        <p>A continuación dejaré el código completo de la clase creada.</p>
+        <div class="contenedor-margen">
+            <div class="contenedor-codigo">
+                <div class="contenedor-codigo-superior">
+                    <p>Código completo.</p>
+                    <button onclick="mostrarEsconder(event, 'codigo')">Mostrar</button>
+                </div> 
+
+                <pre id="codigo" class="prettyprint" style="height: 0px; visibility: hidden;"><code class="language-java" style="font-size: large;">
+
+public class CifradoSimetrico {
+
+    public static void main(String args[]) throws NoSuchAlgorithmException
+    {
+        /*  Creamos el objeto SecureRandom, que nos permite generar números aleatorios 
+        *   de manera segura y posteriormente creamos el objeto KeyGenerator utilizando
+        *   el método estático getInstance(), pasandolo como parámetro el tipo de 
+        *   algoritmo que vamos a utilizar, en este caso será AES
+        */
+        SecureRandom sr = new SecureRandom();
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+
+        /*  Especificamos el tamaño de la llave en bits y le pasamos el objeto SecureRandom,
+        *   que permitirá generar la clave aleatoria de forma segura.
+        */
+        keyGenerator.init(256, sr);
+
+        //  Generamos la llave
+        SecretKey key = keyGenerator.generateKey();
+
+        String msg = "Mensaje para encriptar y posteriormente desencriptar";
+        
+        byte[] msgEncryptedBytes = encriptar(msg.getBytes(), key, key.getAlgorithm());
+        System.out.println("Texto encriptado -> " + new String(msgEncryptedBytes));
+
+        byte[] msgDecryptedBytes = desencriptar(msgEncryptedBytes, key, key.getAlgorithm());
+        System.out.println("Texto desencriptado -> " + new String(msgDecryptedBytes));
+
+    }
+    
+    public static byte[] encriptar(byte[] inputBytes, SecretKey key, String algorithm){
+    
+        try {
+            /*  Utilizamos el metodo estático getInstance() especificando el tipo de algoritmo que
+            *   vamos a usar para crear el objeto, que será AES.
+            */ 
+            Cipher cipher = Cipher.getInstance(algorithm);
+
+            //  Inicializamos el cipher en modo de encriptado y pasamos la llave
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            /*  Por último le pasamos el texto en bytes, y nos devolverá el texto encriptado
+            *   en bytes
+            */
+            return cipher.doFinal(inputBytes);
+
+        }  catch (Exception ex) {
+            System.out.print(ex);
+        }
+
+        return null;
+
+    }
+
+    public static byte[] desencriptar(byte[] inputBytes, SecretKey key, String algorithm){
+
+        try {
+
+            Cipher cipher = Cipher.getInstance(algorithm);
+
+            //  Inicializamos el cipher en modo de desencriptado y pasamos la llave
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return cipher.doFinal(inputBytes);
+
+        }  catch (Exception ex) {
+            System.out.print(ex);
+        }
+
+        return null;
+
+    }
+}
+        
+                </code></pre>
+            </div>
+        </div>
+    </article>
+    <footer>
+        <img src="../images/logo.png" alt="logo">
+        <p>Copyright 2022</p>
+    </footer>
+    <script src="../javascript/scripts.js"></script>
+</body>
+</html>
